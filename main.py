@@ -36,8 +36,8 @@ from src.Py import telemetry
 from UI.ui_main_window import Ui_BlurAutoClicker as ui_main_window
 
 # --- Constants ---
-CURRENT_VERSION = "v2.1.0"
-DEBUG_MODE = True
+CURRENT_VERSION = "v2.1.1"
+DEBUG_MODE = False
 
 ctypes.windll.kernel32.SetConsoleMode(
     ctypes.windll.kernel32.GetStdHandle(-10), 7
@@ -317,27 +317,27 @@ if __name__ == "__main__":
     # Supabase integration
     # -----------------------------------------------------------------------
 
-    def send_stats(clicks, elapsed, avg_cpu):
-        for i in range(3):
+    def send_stats(clicks, elapsed, avg_cpu=None):
+        payload = {
+            "clicks": clicks,
+            "time": round(elapsed, 2),
+        }
+        if avg_cpu is not None:
+            payload["avg_cpu"] = round(avg_cpu, 2)
+
+        try:
             response = requests.post(
                 f"{SUPABASE_URL}/rest/v1/quick_updates",
                 headers=_supabase_headers,
-                json={
-                    "clicks": clicks,
-                    "time": round(elapsed, 2),
-                    "avg_cpu": round(avg_cpu, 2),
-                },
+                json=payload,
                 timeout=10,
             )
-            if not response.ok:
-                log(f"[{current_time()}] Supabase error detail: {response.text}")
-                response.raise_for_status()
-                time.sleep(2)
-                continue
-            log(f"[{current_time()}] Stats sent to Supabase")
-            return
-
-        log(f"[{current_time()}] Stats failed to send after 3 attempts")
+            if response.ok:
+                log(f"[{current_time()}] Stats sent to Supabase")
+            else:
+                log(f"[{current_time()}] Supabase error: {response.text}")
+        except requests.RequestException as e:
+            log(f"[{current_time()}] Supabase request failed: {e}")
 
     # -----------------------------------------------------------------------
     # Clicker logic
@@ -345,10 +345,11 @@ if __name__ == "__main__":
 
     def on_stop(clicks, elapsed, avg_cpu):
         log(f"[{current_time()}] Session Stopped")
+        cpu = avg_cpu if avg_cpu > 0.0 else None
+        threading.Thread(target=send_stats, args=(
+            clicks, elapsed, cpu)).start()
         log_session_summary()
         update_local_statistics(clicks, elapsed, avg_cpu)
-        threading.Thread(target=send_stats, args=(
-            clicks, elapsed, avg_cpu)).start()
 
     _cb_ref = STATS_CB(on_stop)
     dll.set_stats_callback(_cb_ref)
@@ -540,10 +541,6 @@ if __name__ == "__main__":
         start_countdown(4, on_tick, on_finish)
 
     ui_widgets.pick_position_button.clicked.connect(start_position_picker)
-
-    # -----------------------------------------------------------------------
-    # Apply Local Personal Statistics
-    # -----------------------------------------------------------------------
 
     # -----------------------------------------------------------------------
     # Wire up signals

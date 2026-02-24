@@ -105,7 +105,7 @@ fn get_button_flags(button: i32) -> (u32, u32) {
 // --- CPU Sampling ---
 
 // Read system-wide idle/kernel/user times and return CPU usage % since last call
-fn cpu_usage_percent(prev_idle: &mut u64, prev_total: &mut u64) -> f64 {
+fn cpu_usage_percent(prev_process: &mut u64, prev_instant: &mut Instant) -> f64 {
     let mut creation = FILETIME {
         dwLowDateTime: 0,
         dwHighDateTime: 0,
@@ -134,24 +134,18 @@ fn cpu_usage_percent(prev_idle: &mut u64, prev_total: &mut u64) -> f64 {
     };
 
     let to_u64 = |ft: FILETIME| (ft.dwHighDateTime as u64) << 32 | ft.dwLowDateTime as u64;
-
     let process_time = to_u64(kernel) + to_u64(user);
 
-    let d_process = process_time.saturating_sub(*prev_idle);
-    *prev_idle = process_time;
+    let d_process = process_time.saturating_sub(*prev_process);
+    *prev_process = process_time;
 
-    // wall clock time in 100ns units
-    let now = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .unwrap_or_default()
-        .as_nanos() as u64
-        / 100;
-    let d_wall = now.saturating_sub(*prev_total);
-    *prev_total = now;
+    let d_wall = prev_instant.elapsed().as_nanos() as u64 / 100; // convert to 100ns units
+    *prev_instant = Instant::now();
 
     if d_wall == 0 {
         return 0.0;
     }
+
     (d_process as f64 / d_wall as f64) * 100.0
 }
 
@@ -300,11 +294,11 @@ pub extern "C" fn start_clicker(
     let mut click_count: i64 = 0;
 
     // --- CPU tracking ---
-    let mut prev_idle: u64 = 0;
-    let mut prev_total: u64 = 0;
+    let mut prev_process: u64 = 0;
+    let mut prev_instant = Instant::now();
     let mut cpu_samples: Vec<f64> = Vec::new();
     let mut last_cpu_sample = Instant::now();
-    cpu_usage_percent(&mut prev_idle, &mut prev_total);
+    let mut warmup_samples: u32 = 2;
 
     let (down_flag, up_flag) = get_button_flags(button);
     let cps = if interval > 0.0 { 1.0 / interval } else { 0.0 };
@@ -398,9 +392,20 @@ pub extern "C" fn start_clicker(
         click_count += batch_size as i64;
         CLICK_COUNT.store(click_count, Ordering::Relaxed);
 
-        // Sample CPU usage ~once per second
-        if last_cpu_sample.elapsed() >= Duration::from_secs(1) {
-            cpu_samples.push(cpu_usage_percent(&mut prev_idle, &mut prev_total));
+        // Sample CPU usage dynamically based on run length.
+        let cpu_sample_interval = match start_time.elapsed().as_secs() {
+            0..=10 => Duration::from_millis(200),
+            11..=60 => Duration::from_secs(1),
+            _ => Duration::from_secs(5),
+        };
+
+        if last_cpu_sample.elapsed() >= cpu_sample_interval {
+            let sample = cpu_usage_percent(&mut prev_process, &mut prev_instant);
+            if warmup_samples == 0 {
+                cpu_samples.push(sample);
+            } else {
+                warmup_samples -= 1;
+            }
             last_cpu_sample = Instant::now();
         }
 
@@ -414,8 +419,8 @@ pub extern "C" fn start_clicker(
 
     let elapsed = start_time.elapsed().as_secs_f64();
 
-    let avg_cpu = if cpu_samples.is_empty() {
-        0.0
+    let avg_cpu: f64 = if cpu_samples.is_empty() {
+        -1.0
     } else {
         let sum: f64 = cpu_samples.iter().sum();
         let avg = sum / cpu_samples.len() as f64;
