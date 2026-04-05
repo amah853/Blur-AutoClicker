@@ -58,7 +58,7 @@ The old Config and Stats files will unfortunately not be compatible with the new
 
 ## license
 
-GPL v3 [https://www.gnu.org/licenses/gpl-3.0.en.html](read the license)
+GPL v3 https://www.gnu.org/licenses/gpl-3.0.en.html#license-text
 
 ## Support the project
 Ko-fi: https://ko-fi.com/blur009
