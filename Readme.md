@@ -4,7 +4,7 @@
     <img src="https://github.com/Blur009/Blur-AutoClicker/blob/main/public/V3.0.0_UI.png" width="600"/>
 </div>
 <p align="center"><em>An accuracy and performance focused auto clicker</em></p>
-
+<p align="center">[![Downloads](https://img.shields.io/github/downloads/Blur009/Blur-AutoClicker/total?style=for-the-badge&label=downloads)](https://github.com/Blur009/Blur-AutoClicker/releases)</p>
 
 ## Why I made it:
 
