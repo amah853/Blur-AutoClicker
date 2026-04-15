@@ -1,0 +1,195 @@
+{
+  "language": {
+    "en": "English",
+    "es": "Español",
+    "fr": "Français",
+    "ar": "العربية"
+  },
+  "common": {
+    "on": "On",
+    "off": "Off",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "reset": "Reset",
+    "resetting": "Resetting...",
+    "notAvailable": "N/A",
+    "dark": "Dark",
+    "light": "Light"
+  },
+  "titleBar": {
+    "simple": "Simple",
+    "advanced": "Advanced",
+    "settings": "Settings",
+    "enableAlwaysOnTop": "Enable Always on Top",
+    "disableAlwaysOnTop": "Disable Always on Top",
+    "minimize": "Minimize",
+    "close": "Close"
+  },
+  "settings": {
+    "supportMe": "Support Me",
+    "version": "Version",
+    "usageData": "Your Usage Data",
+    "usageDataDescription": "Your personal clicker stats, tracked locally.",
+    "totalClicks": "Total Clicks",
+    "totalTimeClicking": "Total Time spent clicking",
+    "averageCpu": "CPU Usage avg",
+    "sessions": "Sessions",
+    "noRuns": "No runs recorded yet",
+    "stopHitboxOverlay": "Stop Hitbox Overlay",
+    "stopHitboxOverlayDescription": "Toggles whether the stop hitbox overlay is shown.",
+    "stopReasonAlert": "Stop Reason Alert",
+    "stopReasonAlertDescription": "Shows why the clicker stopped in the title bar.",
+    "language": "Language",
+    "languageDescription": "Choose the app display language.",
+    "theme": "Theme",
+    "themeDescription": "Switch between dark and light themes.",
+    "resetAll": "Reset All Settings",
+    "resetAllDescription": "Will reset all input fields and settings to the defaults."
+  },
+  "simple": {
+    "changeClickInterval": "Change Click Interval",
+    "switchMode": "Switch between hotkey Toggle and Hold mode",
+    "selectMouseButton": "Select which mouse button gets clicked",
+    "hold": "Hold",
+    "holdDescription": "How long the mouse button gets held down during each click",
+    "randomization": "Randomization",
+    "randomizationDescription": "Randomly changes click speed in % range of set CPS"
+  },
+  "advanced": {
+    "clicksPer": "Clicks Per",
+    "hotkey": "Hotkey",
+    "mouseButton": "Mouse Button",
+    "dutyCycle": "Duty Cycle",
+    "dutyCycleDescription": "Randomizes how long the mouse button stays held between the min and max percentages of each click interval.",
+    "speedVariation": "Speed Variation",
+    "speedVariationDescription": "Randomizes click timing around your configured speed by up to this percentage.",
+    "doubleClick": "Double Click",
+    "doubleClickDescription": "Fires the button twice per interval with a configurable delay between the clicks.",
+    "clickLimit": "Click Limit",
+    "timeLimit": "Time Limit",
+    "cornerStop": "Corner Stop",
+    "cornerStopDescription": "Stops the clicker when the cursor enters a screen corner. Keep it as a failsafe.",
+    "edgeStop": "Edge Stop",
+    "edgeStopDescription": "Stops the clicker when the cursor reaches a screen edge. Keep it as a failsafe.",
+    "position": "Position",
+    "positionDescription": "Moves the cursor to the saved point before each click while enabled.",
+    "delay": "delay",
+    "clicksUnit": "clicks",
+    "pick": "Pick",
+    "picking": "Picking...",
+    "pickingIn": "Picking in {seconds}"
+  },
+  "options": {
+    "interval": {
+      "s": "Second",
+      "m": "Minute",
+      "h": "Hour",
+      "d": "Day"
+    },
+    "intervalShort": {
+      "s": "s",
+      "m": "m",
+      "h": "h",
+      "d": "d"
+    },
+    "mode": {
+      "Toggle": "Toggle",
+      "Hold": "Hold"
+    },
+    "mouseButton": {
+      "Left": "Left",
+      "Middle": "Middle",
+      "Right": "Right"
+    },
+    "mouseClick": {
+      "Left": "Left Click",
+      "Middle": "Middle Click",
+      "Right": "Right Click"
+    },
+    "timeUnitShort": {
+      "s": "s",
+      "m": "m",
+      "h": "h"
+    }
+  },
+  "hotkey": {
+    "pressKeys": "Press keys...",
+    "empty": "Click and press keys",
+    "key": {
+      "up": "Up",
+      "down": "Down",
+      "left": "Left",
+      "right": "Right",
+      "pageup": "Page Up",
+      "pagedown": "Page Down",
+      "backspace": "Backspace",
+      "delete": "Delete",
+      "insert": "Insert",
+      "home": "Home",
+      "end": "End",
+      "enter": "Enter",
+      "tab": "Tab",
+      "space": "Space",
+      "escape": "Esc",
+      "esc": "Esc",
+      "mouseleft": "Mouse Left",
+      "mouseright": "Mouse Right",
+      "mousemiddle": "Scroll Button",
+      "mouse4": "Mouse Back",
+      "mouse5": "Mouse Forward",
+      "scrollup": "Scroll Up",
+      "scrolldown": "Scroll Down",
+      "numpad0": "Num 0",
+      "numpad1": "Num 1",
+      "numpad2": "Num 2",
+      "numpad3": "Num 3",
+      "numpad4": "Num 4",
+      "numpad5": "Num 5",
+      "numpad6": "Num 6",
+      "numpad7": "Num 7",
+      "numpad8": "Num 8",
+      "numpad9": "Num 9",
+      "numpadadd": "Num +",
+      "numpadsubtract": "Num -",
+      "numpadmultiply": "Num *",
+      "numpaddivide": "Num /",
+      "numpaddecimal": "Num .",
+      "numpadenter": "Num Enter"
+    },
+    "modifier": {
+      "ctrl": "Ctrl",
+      "alt": "Alt",
+      "shift": "Shift",
+      "super": "Super"
+    }
+  },
+  "update": {
+    "to": "to",
+    "preparing": "Preparing update...",
+    "notAvailable": "Update is no longer available.",
+    "downloading": "Downloading update...",
+    "installing": "Installing update...",
+    "installedRestart": "Update installed. Restart to apply it.",
+    "installFailed": "Update install failed.",
+    "restartFailed": "Restart failed. Please reopen the app manually.",
+    "restartToApply": "Restart to Apply Update",
+    "downloadAndInstall": "Download and Install"
+  },
+  "stopReason": {
+    "stoppedFromUi": "Stopped from UI",
+    "stoppedFromToggle": "Stopped from toggle",
+    "stoppedFromHotkey": "Stopped from hotkey",
+    "stoppedFromHoldHotkey": "Stopped from hold hotkey",
+    "stopped": "Stopped",
+    "topLeftCornerFailsafe": "Top-left corner failsafe",
+    "topRightCornerFailsafe": "Top-right corner failsafe",
+    "bottomLeftCornerFailsafe": "Bottom-left corner failsafe",
+    "bottomRightCornerFailsafe": "Bottom-right corner failsafe",
+    "topEdgeFailsafe": "Top edge failsafe",
+    "rightEdgeFailsafe": "Right edge failsafe",
+    "bottomEdgeFailsafe": "Bottom edge failsafe",
+    "leftEdgeFailsafe": "Left edge failsafe",
+    "clickLimitReached": "Click limit reached ({count})",
+    "timeLimitReached": "Time limit reached ({time})"
+  }
+}

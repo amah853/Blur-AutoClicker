@@ -76,6 +76,12 @@ type LayoutMapLike = {
   get(code: string): string | undefined;
 };
 
+export type HotkeyDisplayLabels = {
+  empty: string;
+  modifiers: Record<"ctrl" | "alt" | "shift" | "super", string>;
+  keys: Partial<Record<string, string>>;
+};
+
 let layoutMapPromise: Promise<LayoutMapLike | null> | null = null;
 
 function normalizeModifierToken(token: string): string | null {
@@ -162,6 +168,7 @@ function normalizeNumpadFromCode(
 function displayTokenFromStoredValue(
   token: string,
   layoutMap: LayoutMapLike | null,
+  labels?: HotkeyDisplayLabels,
 ): string {
   const trimmed = token.trim();
   if (!trimmed) return trimmed;
@@ -181,7 +188,7 @@ function displayTokenFromStoredValue(
   }
 
   if (NUMPAD_CODE_MAP[trimmed]) {
-    return displayTokenFromStoredValue(NUMPAD_CODE_MAP[trimmed], layoutMap);
+    return displayTokenFromStoredValue(NUMPAD_CODE_MAP[trimmed], layoutMap, labels);
   }
 
   const lower = trimmed.toLowerCase();
@@ -228,7 +235,7 @@ function displayTokenFromStoredValue(
   };
 
   if (namedDisplayMap[lower]) {
-    return namedDisplayMap[lower];
+    return labels?.keys[lower] ?? namedDisplayMap[lower];
   }
 
   return trimmed;
@@ -389,21 +396,22 @@ export function captureWheelHotkey(event: {
 export function formatHotkeyForDisplay(
   value: string,
   layoutMap: LayoutMapLike | null,
+  labels?: HotkeyDisplayLabels,
 ): string {
-  if (!value) return "Click and press keys";
+  if (!value) return labels?.empty ?? "Click and press keys";
 
   return value
     .split("+")
     .map((part) => {
       const modifier = normalizeModifierToken(part);
       if (modifier) {
-        if (modifier === "ctrl") return "Ctrl";
-        if (modifier === "alt") return "Alt";
-        if (modifier === "shift") return "Shift";
-        return "Super";
+        if (modifier === "ctrl") return labels?.modifiers.ctrl ?? "Ctrl";
+        if (modifier === "alt") return labels?.modifiers.alt ?? "Alt";
+        if (modifier === "shift") return labels?.modifiers.shift ?? "Shift";
+        return labels?.modifiers.super ?? "Super";
       }
 
-      const display = displayTokenFromStoredValue(part, layoutMap);
+      const display = displayTokenFromStoredValue(part, layoutMap, labels);
       return display.length === 1 ? display.toUpperCase() : display;
     })
     .join(" + ");

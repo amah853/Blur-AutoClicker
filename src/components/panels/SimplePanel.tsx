@@ -1,4 +1,5 @@
 import type { Settings } from "../../store";
+import { useTranslation, type TranslationKey } from "../../i18n";
 import HotkeyCaptureInput from "../HotkeyCaptureInput";
 import "./Modes.css";
 import "./SimplePanel.css";
@@ -10,16 +11,17 @@ interface SimplePanelProps {
 }
 
 const INTERVAL_OPTIONS = [
-  { value: "s", label: "Second" },
-  { value: "m", label: "Minute" },
-  { value: "h", label: "Hour" },
-  { value: "d", label: "Day" },
+  { value: "s" },
+  { value: "m" },
+  { value: "h" },
+  { value: "d" },
 ] as const;
 
 const MODE_OPTIONS = ["Toggle", "Hold"] as const;
 const MOUSE_BUTTON_OPTIONS = ["Left", "Middle", "Right"] as const;
 
 export default function SimplePanel({ settings, update }: SimplePanelProps) {
+  const { t } = useTranslation();
   const normalizeRaw = (raw: string) => raw.replace(/^0+(?=\d)/, "");
 
   const parseRawNumber = (raw: string) => {
@@ -108,7 +110,7 @@ export default function SimplePanel({ settings, update }: SimplePanelProps) {
           <button
             type="button"
             className="simple-cycle-btn"
-            title="Change Click Interval"
+            title={t("simple.changeClickInterval")}
             style={{ display: "flex", alignItems: "center", gap: "4px" }}
             onClick={(e) =>
               cycleWithClick(e, () =>
@@ -134,7 +136,8 @@ export default function SimplePanel({ settings, update }: SimplePanelProps) {
             }
           >
             {INTERVAL_OPTIONS.find((o) => o.value === settings.clickInterval)
-              ?.label ?? "Second"}
+              ? t(`options.interval.${settings.clickInterval}` as TranslationKey)
+              : t("options.interval.s")}
           </button>
           <svg
             className="Icon clock-icon"
@@ -186,7 +189,7 @@ export default function SimplePanel({ settings, update }: SimplePanelProps) {
           <button
             type="button"
             className="simple-cycle-btn"
-            title="Switch between hotkey Toggle and Hold mode"
+            title={t("simple.switchMode")}
             onClick={(e) =>
               cycleWithClick(e, () =>
                 update({
@@ -202,7 +205,7 @@ export default function SimplePanel({ settings, update }: SimplePanelProps) {
               )
             }
           >
-            {settings.mode}
+            {t(`options.mode.${settings.mode}` as TranslationKey)}
           </button>
         </div>
       </div>
@@ -212,7 +215,7 @@ export default function SimplePanel({ settings, update }: SimplePanelProps) {
           <button
             type="button"
             className="simple-cycle-btn"
-            title="Select which mouse button gets clicked"
+            title={t("simple.selectMouseButton")}
             onClick={(e) =>
               cycleWithClick(e, () =>
                 update({
@@ -236,22 +239,16 @@ export default function SimplePanel({ settings, update }: SimplePanelProps) {
               )
             }
           >
-            {
-              {
-                Left: "Left Click",
-                Middle: "Middle Click",
-                Right: "Right Click",
-              }[settings.mouseButton]
-            }
+            {t(`options.mouseClick.${settings.mouseButton}` as TranslationKey)}
           </button>
         </div>
 
         <div className="InputBox">
-          <div className="muted">Hold</div>
+          <div className="muted">{t("simple.hold")}</div>
           <div className="vertical-devider" />
           <input
             type="number"
-            title="How long the mouse button gets held down during each click"
+            title={t("simple.holdDescription")}
             className="simple-inline-input numbervalue"
             style={{
               width: dynamicChWidth(settings.dutyCycle),
@@ -286,11 +283,11 @@ export default function SimplePanel({ settings, update }: SimplePanelProps) {
         </div>
 
         <div className="InputBox">
-          <div className="muted">Randomization</div>
+          <div className="muted">{t("simple.randomization")}</div>
           <div className="vertical-devider" />
           <input
             type="number"
-            title="Randomly changes clicks speed in % range of set CPS"
+            title={t("simple.randomizationDescription")}
             className="simple-inline-input numbervalue"
             style={{
               width: dynamicChWidth(settings.speedVariation),

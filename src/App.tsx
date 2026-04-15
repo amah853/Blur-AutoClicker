@@ -4,6 +4,7 @@ import { getCurrentWindow, LogicalSize } from "@tauri-apps/api/window";
 import { lazy, useEffect, useRef, useState } from "react";
 import UpdateBanner from "./components/Updatebanner";
 import { canonicalizeHotkeyForBackend } from "./hotkeys";
+import { I18nProvider, isRtlLanguage } from "./i18n";
 import {
   APP_VERSION,
   DEFAULT_SETTINGS,
@@ -364,6 +365,13 @@ export default function App() {
     document.documentElement.dataset.theme = settings.theme ?? "dark";
   }, [settings.theme]);
 
+  useEffect(() => {
+    document.documentElement.lang = settings.language;
+    document.documentElement.dir = isRtlLanguage(settings.language)
+      ? "rtl"
+      : "ltr";
+  }, [settings.language]);
+
   const handleTabChange = (nextTab: Tab) => {
     setTab(nextTab);
 
@@ -412,7 +420,8 @@ export default function App() {
   };
 
   return (
-    <div className="app-root" data-tab={tab}>
+    <I18nProvider language={settings.language}>
+      <div className="app-root" data-tab={tab}>
       <TitleBar
         tab={tab}
         setTab={handleTabChange}
@@ -458,6 +467,7 @@ export default function App() {
           />
         )}
       </main>
-    </div>
+      </div>
+    </I18nProvider>
   );
 }

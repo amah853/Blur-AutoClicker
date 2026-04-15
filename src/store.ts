@@ -1,5 +1,6 @@
 import { getVersion } from "@tauri-apps/api/app";
 import { LazyStore } from "@tauri-apps/plugin-store";
+import { DEFAULT_LANGUAGE, isLanguage, type Language } from "./i18n";
 
 const store = new LazyStore("settings.json");
 
@@ -47,6 +48,7 @@ export interface Settings {
   showStopReason: boolean;
   showStopOverlay: boolean;
   theme: Theme;
+  language: Language;
 }
 
 export interface ClickerStatus {
@@ -100,6 +102,7 @@ export const DEFAULT_SETTINGS: Settings = {
   showStopReason: true,
   showStopOverlay: true,
   theme: "dark",
+  language: DEFAULT_LANGUAGE,
 };
 
 function sanitizeSavedPanel(value: unknown): SavedPanel {
@@ -233,6 +236,7 @@ function sanitizeSettings(input?: Partial<Settings> | null): Settings {
     explanationMode: sanitizeExplanationMode(saved),
     lastPanel: sanitizeSavedPanel(saved.lastPanel),
     theme: saved.theme === "light" ? "light" : "dark",
+    language: isLanguage(saved.language) ? saved.language : DEFAULT_LANGUAGE,
   };
 }
 
